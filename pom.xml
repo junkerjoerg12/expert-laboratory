@@ -17,20 +17,14 @@
 
     <dependency>
       <groupId>org.openjfx</groupId>
-      <artifactId>javafx-controls</artifactId>
-      <version>13</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.openjfx</groupId>
       <artifactId>javafx-fxml</artifactId>
-      <version>13</version>
+      <version>19</version>
     </dependency>
 
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-controls</artifactId>
-      <version>21.0.2</version>
+      <version>21.0.1</version>
     </dependency>
 
   </dependencies>
@@ -45,21 +39,16 @@
           <release>11</release>
         </configuration>
       </plugin>
+
       <plugin>
-        <groupId>org.openjfx</groupId>
-        <artifactId>javafx-maven-plugin</artifactId>
-        <version>0.0.8</version>
-        <executions>
-          <execution>
-            <!-- Default configuration for running -->
-            <!-- Usage: mvn clean javafx:run -->
-            <id>default-cli</id>
-            <configuration>
-              <mainClass>de.junkerjoerg12.ui.Main</mainClass>
-            </configuration>
-          </execution>
-        </executions>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-maven-plugin</artifactId>
+      <version>0.0.8</version>
+        <configuration>
+          <mainClass>de.junkerjoerg12.ui.Main</mainClass>
+        </configuration>
       </plugin>
+
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
@@ -72,7 +61,7 @@
           </execution>
         </executions>
         <configuration>
-          <mainClass>de.junkerjoerg12.Tetris.Main</mainClass>
+          <mainClass>de.junkerjoerg12.ui.Main</mainClass>
         </configuration>
       </plugin>
     </plugins>
