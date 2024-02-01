@@ -26,12 +26,10 @@ public class Main extends Application {// simmilar to JFrame
     Group group = new Group();// a rootnode
     Scene scene = new Scene(group, Color.LIME);// simmilar to JPanel, needs a rootnode as argument
 
-    Path path = Paths.get("/../../../../resources/de/junkerjoerg12/ui/ExLab.png");
-    File file = path.toFile();
-    Image logo = new Image(file.toURI().toString());
-    System.out.println(logo + "logoo");
-
+    // adds a logo to the window
+    Image logo = new Image(getClass().getResourceAsStream("/de/junkerjoerg12/ui/ExLab.png"));
     mainWindow.getIcons().add(logo);
+
     mainWindow.setTitle("Expert Laboratory");
     mainWindow.setScene(scene);
     mainWindow.show();// shows the main window
