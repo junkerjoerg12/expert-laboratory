@@ -21,15 +21,16 @@ public class Main extends Application {// simmilar to JFrame
     // Group root = new Group();// a rootnode
     Parent root = FXMLLoader.load(getClass().getResource("/fxml/Main.fxml"));
     Scene scene = new Scene(root, 199, 245, Color.PINK);// simmilar to JPanel, needs a rootnode as argument
+    scene.getStylesheets().add(getClass().getResource("/fxml/application.css").toExternalForm());
 
     // adds a logo to the window
     Image logo = new Image(getClass().getResourceAsStream("/de/junkerjoerg12/ui/ExLab.png"));
     mainWindow.getIcons().add(logo);
 
+    mainWindow.setMaximized(true);
     mainWindow.setTitle("Expert Laboratory");
     mainWindow.setScene(scene);
     mainWindow.show();
-    System.out.println("Hallo, ich bin eine methode");
   }
 
 }
