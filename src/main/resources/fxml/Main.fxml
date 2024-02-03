@@ -14,7 +14,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1081.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1081.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.junkerjoerg12.ui.Controller">
    <children>
       <MenuBar fx:id="menueBar" layoutX="1.0" prefHeight="25.0" prefWidth="1920.0">
         <menus>
@@ -42,37 +42,40 @@
       </MenuBar>
       <ToolBar fx:id="toolBar" layoutX="1.0" layoutY="25.0" prefHeight="40.0" prefWidth="1920.0">
         <items>
-          <Button mnemonicParsing="false" text="connect" />
+          <Button mnemonicParsing="false" onAction="#test" text="connect" />
             <Button mnemonicParsing="false" text="choose" />
             <Button mnemonicParsing="false" text="default" />
             <ToggleButton mnemonicParsing="false" text="simulation" />
         </items>
       </ToolBar>
-      <Pane fx:id="breadboard" layoutX="168.0" layoutY="65.0" prefHeight="1017.0" prefWidth="1744.0" />
-      <ToolBar layoutX="-1.0" layoutY="63.0" orientation="VERTICAL" prefHeight="1017.0" prefWidth="169.0">
+      <Pane fx:id="breadboard" layoutX="161.0" layoutY="65.0" prefHeight="1017.0" prefWidth="1750.0">
+         <children>
+            <Rectangle fx:id="testRect" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="200.0" layoutX="204.0" layoutY="95.0" onMouseClicked="#clicked" onMouseDragged="#dragged" stroke="BLACK" strokeType="INSIDE" width="200.0" />
+         </children></Pane>
+      <ToolBar fx:id="hallo" layoutX="-8.0" layoutY="65.0" orientation="VERTICAL" prefHeight="1017.0" prefWidth="169.0">
          <items>
-            <StackPane prefHeight="80.0" prefWidth="159.0">
+            <StackPane fx:id="and" onMouseClicked="#clicked" onMouseDragged="#dragged" prefHeight="80.0" prefWidth="159.0">
                <children>
                   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="73.0" stroke="BLACK" strokeType="INSIDE" width="45.0" />
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="And" />
                </children>
             </StackPane>
-            <StackPane prefHeight="80.0" prefWidth="106.0">
+            <StackPane fx:id="or" onMouseClicked="#clicked" onMouseDragged="#dragged" prefHeight="80.0" prefWidth="106.0">
                <children>
                   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="73.0" stroke="BLACK" strokeType="INSIDE" width="45.0" />
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Or" />
                </children>
             </StackPane>
-            <StackPane prefHeight="80.0" prefWidth="159.0">
-               <children>
-                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="73.0" stroke="BLACK" strokeType="INSIDE" width="45.0" />
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Nand" />
-               </children>
-            </StackPane>
-            <StackPane prefHeight="80.0" prefWidth="159.0">
+            <StackPane fx:id="nor" onMouseClicked="#clicked" onMouseDragged="#dragged" prefHeight="80.0" prefWidth="159.0">
                <children>
                   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="73.0" stroke="BLACK" strokeType="INSIDE" width="45.0" />
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Nor" />
+               </children>
+            </StackPane>
+            <StackPane fx:id="nand" onMouseClicked="#clicked" onMouseDragged="#dragged" prefHeight="80.0" prefWidth="159.0">
+               <children>
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="73.0" stroke="BLACK" strokeType="INSIDE" width="45.0" />
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Nand" />
                </children>
             </StackPane>
          </items>
