@@ -1,11 +1,16 @@
 package de.junkerjoerg12.ui;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 
 public class Controller {
@@ -39,7 +44,7 @@ public class Controller {
   }
 
   public void dragged(MouseEvent e) {
-    // "junps up" the hight of the mouse pointer, don't know why
+    // "junps up" the hight of the mouse pointer
     Node node = (Node) e.getSource();
     node.setLayoutX(e.getSceneX() + mouseAnchorX);
     node.setLayoutY(e.getSceneY() + mouseAnchorY);
