@@ -46,8 +46,34 @@ public class Controller {
   public void dragged(MouseEvent e) {
     // "junps up" the hight of the mouse pointer
     Node node = (Node) e.getSource();
-    node.setLayoutX(e.getSceneX() + mouseAnchorX);
-    node.setLayoutY(e.getSceneY() + mouseAnchorY);
+    int x;
+    int y;
+
+    double distanceOfLines = 0;
+
+    // claculates the distance between the lines in the backgroundgrid, probably no
+    // need to calculate everytime
+    for (int i = 0; i < breadboard.getChildren().size(); i++) {
+      if (breadboard.getChildren().get(i).getId() == null && breadboard.getChildren().get(i + 1).getId() == null) {
+        Line line = (Line) breadboard.getChildren().get(i);
+        if (line.getStartX() == line.getEndX()) {
+          Line line1 = (Line) breadboard.getChildren().get(i);
+          Line line2 = (Line) breadboard.getChildren().get(i + 1);
+          distanceOfLines = line1.getStartX() - line2.getStartX();
+          break;
+        } else {
+          Line line1 = (Line) breadboard.getChildren().get(i);
+          Line line2 = (Line) breadboard.getChildren().get(i + 1);
+          distanceOfLines = line1.getStartY() - line2.getStartY();
+          break;
+        }
+      } else {
+        System.err.println("look over the hieraarchy of the children from breadboard");
+      }
+    }
+
+    node.setLayoutX((e.getSceneX() + mouseAnchorX) - ((e.getSceneX() + mouseAnchorX) % distanceOfLines));
+    node.setLayoutY((e.getSceneY() + mouseAnchorY) - ((e.getSceneY() + mouseAnchorY) % distanceOfLines));
   }
 
 }

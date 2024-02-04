@@ -63,5 +63,11 @@ public class Main extends Application {// simmilar to JFrame
       line.setOpacity(0.2);
       breadboard.getChildren().add(line);
     }
+
+    // so the rechtangel is located obove the grid
+    Node temp = breadboard.getChildren().get(0);
+    breadboard.getChildren().remove(0);// removes the rectangel maybe dont hart code it
+    breadboard.getChildren().add(temp);
+
   }
 }
