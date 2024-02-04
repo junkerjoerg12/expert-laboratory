@@ -48,9 +48,9 @@
             <ToggleButton mnemonicParsing="false" text="simulation" />
         </items>
       </ToolBar>
-      <Pane fx:id="breadboard" layoutX="161.0" layoutY="65.0" prefHeight="1017.0" prefWidth="1750.0">
+      <Pane fx:id="breadboard" layoutX="161.0" layoutY="65.0" prefHeight="1017.0" prefWidth="1760.0">
          <children>
-            <Rectangle fx:id="testRect" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="200.0" layoutX="204.0" layoutY="95.0" onMouseClicked="#clicked" onMouseDragged="#dragged" stroke="BLACK" strokeType="INSIDE" width="200.0" />
+            <Rectangle fx:id="testRect" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="200.0" layoutX="204.0" layoutY="95.0" onMouseDragged="#dragged" onMousePressed="#clicked" stroke="BLACK" strokeType="INSIDE" width="200.0" />
          </children></Pane>
       <ToolBar fx:id="hallo" layoutX="-8.0" layoutY="65.0" orientation="VERTICAL" prefHeight="1017.0" prefWidth="169.0">
          <items>
