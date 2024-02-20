@@ -1,4 +1,4 @@
-package de.junkerjoerg12.expert_laboratory;
+package de.junkerjoerg12.expert_laboratory.ui_components;
 
 import de.junkerjoerg12.expert_laboratory.logicGates.LogicGate;
 import de.junkerjoerg12.expert_laboratory.logicGates.Nand;

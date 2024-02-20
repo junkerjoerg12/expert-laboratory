@@ -1,8 +1,10 @@
 package de.junkerjoerg12.expert_laboratory.logicGates;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
 import de.junkerjoerg12.expert_laboratory.ui_components.Breadboard;
+import de.junkerjoerg12.expert_laboratory.ui_components.LogicGateBar;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
@@ -10,7 +12,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 
-public class LogicGate extends StackPane {
+public abstract class LogicGate extends StackPane {
   protected ArrayList<Boolean> inputs;
   protected boolean output;
 
@@ -20,63 +22,125 @@ public class LogicGate extends StackPane {
   protected double mouseAnchorY;
 
   protected Breadboard breadboard;
+  protected LogicGateBar logicGateBar;
 
   protected Rectangle rect;
+
+  protected LogicGate clonedGate;
+  protected LogicGate thisGate;
 
   public LogicGate() {
     inputs = new ArrayList<>(2);
     this.setStyle("-fx-background-color: pink;");
-
     addRectangel();
     setPrefSize(WIDTH, 100);
 
     setOnMouseReleased(new EventHandler<MouseEvent>() {
-
       @Override
       public void handle(MouseEvent event) {
-        mouseAnchorX = 0;
-        mouseAnchorY = 0;
+        System.out.println("mouseReleased");
+        System.out.println("this gate: " + thisGate + " this gates parent :" + thisGate.getParent());
+        System.out.print("clonedGate: " + clonedGate);
+        if (clonedGate != null) {
+
+          logicGateBar.getChildren().remove(clonedGate);
+          System.out.println("cloded gates parents :" + clonedGate.getParent() + "\n");
+          clonedGate = null;
+        } else {
+          logicGateBar.getChildren().remove(thisGate);
+        }
+        thisGate.setAllVisibility(true);
+        // System.out.println("CHildren of logic bar: " + logicGateBar.getChildren());
+        // System.out.println("Childrenn of breadboard: " + breadboard.getChildren());
+      }
+    });
+    setOnMousePressed(new EventHandler<MouseEvent>() {
+      @Override
+      public void handle(MouseEvent e) {
+        mouseAnchorX = e.getX();
+        mouseAnchorY = e.getY();
+        thisGate = (LogicGate) e.getSource();
+        // creates a new LogicGate if the one that was draggd is the one on the
+        // LogicGateBar;
+        logicGateBar = getLogicGateBar();
+        if (thisGate.getParent().equals(logicGateBar)) {
+          if (breadboard == null) {
+            breadboard = getBreadboard();
+          }
+          thisGate.setAllVisibility(false);
+            try {
+              clonedGate = (LogicGate) Class.forName(thisGate.getClass().getName()).getConstructor().newInstance();
+              logicGateBar.getChildren().add(clonedGate);
+              clonedGate.setAllOpacity(0.5);
+            } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+                | InvocationTargetException | NoSuchMethodException | SecurityException | ClassNotFoundException e1) {
+              e1.printStackTrace();
+            }
+          
+        }
       }
     });
 
     setOnMouseDragged(new EventHandler<MouseEvent>() {
+      // plan is to clone this Logic gate and set it invisible, then drag and drop the
+      // cloned one to the breadboard
+
       @Override
       public void handle(MouseEvent e) {
-        // Node node = (Node) e.getSource();
-
-        if (mouseAnchorX == 0 && mouseAnchorY == 0) {
-          mouseAnchorX = e.getX();
-          mouseAnchorY = e.getY();
-        }
-
-        double distanceOfLines = getDistanceOfLInes();
-
-        // node.setLayoutX((e.getScreenX() /*+ mouseAnchorX*/) - ((e.getScreenX() /*+
-        // mouseAnchorX*/) % distanceOfLines));
-        // node.setLayoutY((e.getScreenY() /*+ mouseAnchorY*/) - ((e.getScreenY()/* +
-        // mouseAnchorY*/) % distanceOfLines));
-        System.out.println("getWidth of parent" + getParent().getBoundsInLocal().getWidth());
-
-        if (getLayoutX() > getParent().getLayoutX() + getParent().getBoundsInLocal().getWidth() && getLayoutY() > getParent().getLayoutY()) {
-          setAllOpacity(1.0);
-          // node.setLayoutX(e.getSceneX() - getParent().getLayoutX() - mouseAnchorX
-          //     - (e.getScreenX() - getParent().getLayoutX()) % distanceOfLines);
-          // node.setLayoutY(e.getSceneY() - getParent().getLayoutY() - mouseAnchorY
-          //     - (e.getScreenY() - getParent().getLayoutY()) % distanceOfLines);
-          setLayoutX(e.getSceneX() - getParent().getLayoutX() - mouseAnchorX);
-          setLayoutY(e.getSceneY() - getParent().getLayoutY() - mouseAnchorY);
-
+        if (clonedGate != null) {
+          // move cloned Gate
+          move(clonedGate, e);
         } else {
-          setAllOpacity(0.5);
-          setLayoutX(e.getSceneX() - getParent().getLayoutX() - mouseAnchorX);
-          setLayoutY(e.getSceneY() - getParent().getLayoutY() - mouseAnchorY);
+          // move thisGate
+          move(thisGate, e);
         }
+        System.out.println("done dragging");
       }
     });
-
   }
 
+  private void move(LogicGate gate, MouseEvent e) {
+    double distanceOfLines = getDistanceOfLInes();
+    gate.setLayoutX(e.getSceneX() - getParent().getLayoutX() - mouseAnchorX);
+    gate.setLayoutY(e.getSceneY() - getParent().getLayoutY() - mouseAnchorY);
+    System.out.println("parent alt: " + gate.getParent());
+    if (gate.getLayoutX() > 99) {
+      //if needed switches the parents and changes Opacity for visual indication
+      if (!gate.getParent().equals(breadboard)) {
+        logicGateBar.getChildren().remove(gate);
+        breadboard.getChildren().add(gate);
+        gate.setAllOpacity(1);
+      }
+    } else {
+      if (!gate.getParent().equals(logicGateBar)) {
+        logicGateBar.getChildren().add(gate);
+        breadboard.getChildren().remove(gate);
+        gate.setAllOpacity(0.5);
+      }
+    }
+    System.out.println("parent neu: " + gate.getParent());
+  }
+  /*
+   * for the movement
+   * if (getLayoutX() > getParent().getLayoutX() +
+   * getParent().getBoundsInLocal().getWidth()
+   * && getLayoutY() > getParent().getLayoutY()) {
+   * setAllOpacity(1.0);
+   * // node.setLayoutX(e.getSceneX() - getParent().getLayoutX() - mouseAnchorX
+   * // - (e.getScreenX() - getParent().getLayoutX()) % distanceOfLines);
+   * // node.setLayoutY(e.getSceneY() - getParent().getLayoutY() - mouseAnchorY
+   * // - (e.getScreenY() - getParent().getLayoutY()) % distanceOfLines);
+   * setLayoutX(e.getSceneX() - getParent().getLayoutX() - mouseAnchorX);
+   * setLayoutY(e.getSceneY() - getParent().getLayoutY() - mouseAnchorY);
+   * } else {
+   * setAllOpacity(0.5);
+   * setLayoutX(e.getSceneX() - getParent().getLayoutX() - mouseAnchorX);
+   * setLayoutY(e.getSceneY() - getParent().getLayoutY() - mouseAnchorY);
+   * }
+   */
+
   public LogicGate(byte inputs) {
+    this();
     this.inputs = new ArrayList<>(inputs);
     setPrefSize(WIDTH, 50 * inputs);
 
@@ -116,14 +180,27 @@ public class LogicGate extends StackPane {
     return 100;
   }
 
+  private Breadboard getBreadboard() {
+    for (Node child : getParent().getParent().getChildrenUnmodifiable()) {
+      if (child.getId().equals("breadboard")) {
+        return (Breadboard) child;
+      }
+    }
+    return null;
+  }
+
+  private LogicGateBar getLogicGateBar() {
+    for (Node child : getParent().getParent().getChildrenUnmodifiable()) {
+      if (child.getId().equals("logicGateBar")) {
+        return (LogicGateBar) child;
+      }
+    }
+    return null;
+  }
+
   private double getDistanceOfLInes() {
     if (breadboard == null) {
-      for (Node child : getParent().getParent().getChildrenUnmodifiable()) {
-        if (child.getId().equals("breadboard")) {
-          this.breadboard = (Breadboard) child;
-        }
-      }
-
+      breadboard = getBreadboard(); 
     }
     for (int i = 0; i < breadboard.getChildren().size(); i++) {
       if (breadboard.getChildren().get(i).getId() == null && breadboard.getChildren().get(i + 1).getId() == null) {

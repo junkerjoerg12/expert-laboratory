@@ -1,8 +1,7 @@
 package de.junkerjoerg12.expert_laboratory;
 
-
-
 import de.junkerjoerg12.expert_laboratory.ui_components.Breadboard;
+import de.junkerjoerg12.expert_laboratory.ui_components.LogicGateBar;
 import de.junkerjoerg12.expert_laboratory.ui_components.ModeBar;
 import de.junkerjoerg12.expert_laboratory.ui_components.MyMenuBar;
 
@@ -19,6 +18,7 @@ public class Main extends Application {// simmilar to JFrame
     System.out.println("Application starting ...");
     launch(args);
   }
+
   @Override
   public void start(Stage mainWindow) throws Exception {
     Group root = new Group();// a rootnode
@@ -32,7 +32,7 @@ public class Main extends Application {// simmilar to JFrame
     mainWindow.setTitle("Expert Laboratory");
     mainWindow.setScene(scene);
     mainWindow.show();
-    //!!!Do Not change the order of the Children!!!
+    // !!!Do Not change the order of the Children!!!
     root.getChildren().add(new MyMenuBar());
     root.getChildren().add(new ModeBar(root));
     root.getChildren().add(new Breadboard(root, 10));
@@ -44,6 +44,5 @@ public class Main extends Application {// simmilar to JFrame
     mainWindow.setResizable(false);
 
   }
-
 
 }
