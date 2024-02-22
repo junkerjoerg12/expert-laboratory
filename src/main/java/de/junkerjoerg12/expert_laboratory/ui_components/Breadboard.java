@@ -11,7 +11,7 @@ public class Breadboard extends Pane {
   public Breadboard(Group root, int gridDistance) {
     this.setId("breadboard");
     // this.gridDistance = gridDistance;
-    this.setLayoutX(0);
+    this.setLayoutX(000);
     this.setLayoutY(root.getChildren().get(1).getBoundsInLocal().getMaxY()
         + root.getChildren().get(0).getBoundsInLocal().getMaxY());
     this.setPrefWidth(1920);

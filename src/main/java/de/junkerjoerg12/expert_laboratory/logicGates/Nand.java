@@ -4,7 +4,7 @@ public class Nand extends LogicGate {
 
   private static int nandcounter = 0;
   public Nand(byte inputs) {
-    super(inputs);
+    // super(inputs);
   }
 
   public Nand() {

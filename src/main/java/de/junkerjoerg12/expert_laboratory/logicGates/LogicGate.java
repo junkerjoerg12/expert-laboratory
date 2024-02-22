@@ -29,27 +29,40 @@ public abstract class LogicGate extends StackPane {
   protected LogicGate clonedGate;
   protected LogicGate thisGate;
 
+  // Maybe copy the Gate allways!!
+
   public LogicGate() {
-    inputs = new ArrayList<>(2);
+    // inputs = new ArrayList<>(2);
     this.setStyle("-fx-background-color: pink;");
-    addRectangel();
+    // addRectangel();
     setPrefSize(WIDTH, 100);
 
     setOnMouseReleased(new EventHandler<MouseEvent>() {
       @Override
       public void handle(MouseEvent event) {
-        System.out.println("mouseReleased");
-        System.out.println("this gate: " + thisGate + " this gates parent :" + thisGate.getParent());
-        System.out.print("clonedGate: " + clonedGate);
-        if (clonedGate != null) {
+        // System.out.println("mouseReleased");
+        // System.out.println("this gate: " + thisGate + " this gates parent :" +
+        // thisGate.getParent());
 
-          logicGateBar.getChildren().remove(clonedGate);
-          System.out.println("cloded gates parents :" + clonedGate.getParent() + "\n");
-          clonedGate = null;
-        } else {
-          logicGateBar.getChildren().remove(thisGate);
-        }
+        // System.out.print("clonedGate: " + clonedGate);
         thisGate.setAllVisibility(true);
+        if (thisGate.getParent().getId().equals("breadboard")) {
+          breadboard.getChildren().remove(thisGate);
+          System.out.println("removing this gate form Breadboard");
+        }
+        if (clonedGate.getParent().getId().equals("logicGateBar")) {
+          logicGateBar.getChildren().remove(clonedGate);
+          clonedGate = null;
+          System.out.println("removing cloned gate from LogicGateBar");
+        }
+        // if (clonedGate != null) {
+        //   logicGateBar.getChildren().remove(clonedGate);
+        //   // System.out.println("cloded gates parents :" + clonedGate.getParent() + "\n");
+        //   clonedGate = null;
+        //   // thisGate.setAllVisibility(true);
+        // } else {
+        //   logicGateBar.getChildren().remove(thisGate);
+        // }
         // System.out.println("CHildren of logic bar: " + logicGateBar.getChildren());
         // System.out.println("Childrenn of breadboard: " + breadboard.getChildren());
       }
@@ -57,27 +70,27 @@ public abstract class LogicGate extends StackPane {
     setOnMousePressed(new EventHandler<MouseEvent>() {
       @Override
       public void handle(MouseEvent e) {
-        mouseAnchorX = e.getX();
-        mouseAnchorY = e.getY();
+        // mouseAnchorX = e.getX();
+        // mouseAnchorY = e.getY();
         thisGate = (LogicGate) e.getSource();
         // creates a new LogicGate if the one that was draggd is the one on the
         // LogicGateBar;
         logicGateBar = getLogicGateBar();
-        if (thisGate.getParent().equals(logicGateBar)) {
+        // if (thisGate.getParent().equals(logicGateBar)) {
           if (breadboard == null) {
             breadboard = getBreadboard();
           }
-          thisGate.setAllVisibility(false);
-            try {
-              clonedGate = (LogicGate) Class.forName(thisGate.getClass().getName()).getConstructor().newInstance();
-              logicGateBar.getChildren().add(clonedGate);
-              clonedGate.setAllOpacity(0.5);
-            } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-                | InvocationTargetException | NoSuchMethodException | SecurityException | ClassNotFoundException e1) {
-              e1.printStackTrace();
-            }
-          
-        }
+          // thisGate.setAllVisibility(false);
+          try {
+            clonedGate = (LogicGate) Class.forName(thisGate.getClass().getName()).getConstructor().newInstance();
+            logicGateBar.getChildren().add(clonedGate);
+            thisGate.setAllVisibility(false);
+            // clonedGate.setAllOpacity(0.5);
+          } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+              | InvocationTargetException | NoSuchMethodException | SecurityException | ClassNotFoundException e1) {
+            e1.printStackTrace();
+          }
+        // }
       }
     });
 
@@ -94,57 +107,60 @@ public abstract class LogicGate extends StackPane {
           // move thisGate
           move(thisGate, e);
         }
-        System.out.println("done dragging");
+        // System.out.println("done dragging");
       }
     });
   }
 
   private void move(LogicGate gate, MouseEvent e) {
-    double distanceOfLines = getDistanceOfLInes();
+    // double distanceOfLines = getDistanceOfLInes();
+    // only temporarily while not calculating the distance of the lines
+    if (breadboard == null) {
+      this.breadboard = getBreadboard();
+    }
+
     gate.setLayoutX(e.getSceneX() - getParent().getLayoutX() - mouseAnchorX);
     gate.setLayoutY(e.getSceneY() - getParent().getLayoutY() - mouseAnchorY);
-    System.out.println("parent alt: " + gate.getParent());
+    // System.out.println("parent alt: " + gate.getParent());
     if (gate.getLayoutX() > 99) {
-      //if needed switches the parents and changes Opacity for visual indication
+      // if needed switches the parents and changes Opacity for visual indication
       if (!gate.getParent().equals(breadboard)) {
         logicGateBar.getChildren().remove(gate);
         breadboard.getChildren().add(gate);
-        gate.setAllOpacity(1);
+        // gate.setAllOpacity(1);
       }
     } else {
       if (!gate.getParent().equals(logicGateBar)) {
-        logicGateBar.getChildren().add(gate);
         breadboard.getChildren().remove(gate);
-        gate.setAllOpacity(0.5);
+        logicGateBar.getChildren().add(gate);
+        // gate.setAllOpacity(0.5);
       }
     }
-    System.out.println("parent neu: " + gate.getParent());
+    // System.out.println("parent neu: " + gate.getParent());
   }
-  /*
-   * for the movement
-   * if (getLayoutX() > getParent().getLayoutX() +
-   * getParent().getBoundsInLocal().getWidth()
-   * && getLayoutY() > getParent().getLayoutY()) {
-   * setAllOpacity(1.0);
-   * // node.setLayoutX(e.getSceneX() - getParent().getLayoutX() - mouseAnchorX
-   * // - (e.getScreenX() - getParent().getLayoutX()) % distanceOfLines);
-   * // node.setLayoutY(e.getSceneY() - getParent().getLayoutY() - mouseAnchorY
-   * // - (e.getScreenY() - getParent().getLayoutY()) % distanceOfLines);
-   * setLayoutX(e.getSceneX() - getParent().getLayoutX() - mouseAnchorX);
-   * setLayoutY(e.getSceneY() - getParent().getLayoutY() - mouseAnchorY);
-   * } else {
-   * setAllOpacity(0.5);
-   * setLayoutX(e.getSceneX() - getParent().getLayoutX() - mouseAnchorX);
-   * setLayoutY(e.getSceneY() - getParent().getLayoutY() - mouseAnchorY);
-   * }
-   */
 
-  public LogicGate(byte inputs) {
-    this();
-    this.inputs = new ArrayList<>(inputs);
-    setPrefSize(WIDTH, 50 * inputs);
+  // for the movement
+  // if (getLayoutX() > getParent().getLayoutX() +
+  // getParent().getBoundsInLocal().getWidth()
+  // && getLayoutY() > getParent().getLayoutY()) {
+  // setAllOpacity(1.0);
+  // // node.setLayoutX(e.getSceneX() - getParent().getLayoutX() - mouseAnchorX
+  // // - (e.getScreenX() - getParent().getLayoutX()) % distanceOfLines);
+  // // node.setLayoutY(e.getSceneY() - getParent().getLayoutY() - mouseAnchorY
+  // // - (e.getScreenY() - getParent().getLayoutY()) % distanceOfLines);
+  // setLayoutX(e.getSceneX() - getParent().getLayoutX() - mouseAnchorX);
+  // setLayoutY(e.getSceneY() - getParent().getLayoutY() - mouseAnchorY);
+  // } else {
+  // setAllOpacity(0.5);
+  // setLayoutX(e.getSceneX() - getParent().getLayoutX() - mouseAnchorX);
+  // setLayoutY(e.getSceneY() - getParent().getLayoutY() - mouseAnchorY);
+  // }
 
-  }
+  // public LogicGate(byte inputs) {
+  // this();
+  // this.inputs = new ArrayList<>(inputs);
+  // setPrefSize(WIDTH, 50 * inputs);
+  // }
 
   private void addRectangel() {
 
@@ -169,7 +185,7 @@ public abstract class LogicGate extends StackPane {
     }
   }
 
-  public void setAllOpacity(double opacity) {
+  private void setAllOpacity(double opacity) {
     this.setOpacity(opacity);
     for (Node child : this.getChildren()) {
       child.setOpacity(opacity);
@@ -200,7 +216,7 @@ public abstract class LogicGate extends StackPane {
 
   private double getDistanceOfLInes() {
     if (breadboard == null) {
-      breadboard = getBreadboard(); 
+      breadboard = getBreadboard();
     }
     for (int i = 0; i < breadboard.getChildren().size(); i++) {
       if (breadboard.getChildren().get(i).getId() == null && breadboard.getChildren().get(i + 1).getId() == null) {
