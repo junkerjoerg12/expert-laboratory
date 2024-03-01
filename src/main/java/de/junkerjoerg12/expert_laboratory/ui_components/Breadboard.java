@@ -34,6 +34,5 @@ public class Breadboard extends Pane {
       line.setOpacity(0.2);
       getChildren().add(line);
     }
-    System.out.println(getChildren());
   }
 }
