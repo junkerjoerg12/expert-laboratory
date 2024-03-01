@@ -34,7 +34,7 @@ public abstract class LogicGate extends StackPane {
   public LogicGate() {
     // inputs = new ArrayList<>(2);
     this.setStyle("-fx-background-color: pink;");
-    // addRectangel();
+    addRectangel();
     setPrefSize(WIDTH, 100);
 
     setOnMouseReleased(new EventHandler<MouseEvent>() {
@@ -70,8 +70,8 @@ public abstract class LogicGate extends StackPane {
     setOnMousePressed(new EventHandler<MouseEvent>() {
       @Override
       public void handle(MouseEvent e) {
-        // mouseAnchorX = e.getX();
-        // mouseAnchorY = e.getY();
+        mouseAnchorX = e.getX();
+        mouseAnchorY = e.getY();
         thisGate = (LogicGate) e.getSource();
         // creates a new LogicGate if the one that was draggd is the one on the
         // LogicGateBar;
@@ -113,30 +113,33 @@ public abstract class LogicGate extends StackPane {
   }
 
   private void move(LogicGate gate, MouseEvent e) {
-    // double distanceOfLines = getDistanceOfLInes();
-    // only temporarily while not calculating the distance of the lines
+    double distanceOfLines = getDistanceOfLInes();
     if (breadboard == null) {
       this.breadboard = getBreadboard();
     }
 
-    gate.setLayoutX(e.getSceneX() - getParent().getLayoutX() - mouseAnchorX);
-    gate.setLayoutY(e.getSceneY() - getParent().getLayoutY() - mouseAnchorY);
+    
     // System.out.println("parent alt: " + gate.getParent());
-    if (gate.getLayoutX() > 99) {
+    if (gate.getLayoutX() > 99 && gate.getLayoutY() > 0){
       // if needed switches the parents and changes Opacity for visual indication
+      gate.setLayoutX(e.getScreenX() - getParent().getLayoutX() - mouseAnchorX - (e.getScreenX() - mouseAnchorX) % distanceOfLines);
+      gate.setLayoutY(e.getScreenY() - getParent().getLayoutY() - mouseAnchorY - (e.getScreenY() - mouseAnchorY) % distanceOfLines);
+      // gate.setLayoutX((e.getSceneX() + mouseAnchorX) - ((e.getSceneX() + mouseAnchorX) % distanceOfLines));
+      // gate.setLayoutY((e.getSceneY() + mouseAnchorY) - ((e.getSceneY() + mouseAnchorY) % distanceOfLines));
       if (!gate.getParent().equals(breadboard)) {
         logicGateBar.getChildren().remove(gate);
         breadboard.getChildren().add(gate);
-        // gate.setAllOpacity(1);
+        gate.setAllOpacity(1);
       }
     } else {
+      gate.setLayoutX(e.getSceneX() - getParent().getLayoutX() - mouseAnchorX);
+      gate.setLayoutY(e.getSceneY() - getParent().getLayoutY() - mouseAnchorY);
       if (!gate.getParent().equals(logicGateBar)) {
         breadboard.getChildren().remove(gate);
         logicGateBar.getChildren().add(gate);
-        // gate.setAllOpacity(0.5);
+        gate.setAllOpacity(0.5);
       }
     }
-    // System.out.println("parent neu: " + gate.getParent());
   }
 
   // for the movement
@@ -144,8 +147,7 @@ public abstract class LogicGate extends StackPane {
   // getParent().getBoundsInLocal().getWidth()
   // && getLayoutY() > getParent().getLayoutY()) {
   // setAllOpacity(1.0);
-  // // node.setLayoutX(e.getSceneX() - getParent().getLayoutX() - mouseAnchorX
-  // // - (e.getScreenX() - getParent().getLayoutX()) % distanceOfLines);
+  
   // // node.setLayoutY(e.getSceneY() - getParent().getLayoutY() - mouseAnchorY
   // // - (e.getScreenY() - getParent().getLayoutY()) % distanceOfLines);
   // setLayoutX(e.getSceneX() - getParent().getLayoutX() - mouseAnchorX);
@@ -231,6 +233,7 @@ public abstract class LogicGate extends StackPane {
           return line1.getStartY() - line2.getStartY();
         }
       } else {
+        System.out.println(breadboard.getChildrenUnmodifiable());
         System.err.println("look over the hieraarchy of the children from breadboard");
       }
     }
