@@ -10,7 +10,6 @@ import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 
 public abstract class LogicGate extends Pane {
@@ -103,21 +102,21 @@ public abstract class LogicGate extends Pane {
   }
 
   private void addConnection() {
+    // the input connections
     for (int i = 1; i <= inputs.size(); i++) {
-      System.out.println("in the for loop");
-      // Connection line = new Connection(rect.getX() - rect.getWidth() / 2, i * 20,
-      // rect.getX() -10, i * 20);
-      Connection line = new Connection(0, 0, 20, 0);
-      line.setLayoutY(i * ((100 / (inputs.size() + 1)) - (100 / (inputs.size() + 1)) % LogicGate.distanceOfLines));
-      System.out.println(100 / (inputs.size() + 1));
+      Connection line = new Connection(0, 0, 2 * distanceOfLines, 0);
+      line.setLayoutY(i * ((getBoundsInLocal().getHeight() / (inputs.size() + 1))
+          - (getBoundsInLocal().getHeight() / (inputs.size() + 1)) % distanceOfLines));
       getChildren().add(line);
-
     }
-    System.out.println(getChildren());
+    // the output connection
+    Connection line = new Connection(0, 0, 2 * distanceOfLines, 0);
+    line.setLayoutX(getBoundsInLocal().getWidth() /*- line.getEndX()*/);
+    line.setLayoutY(getBoundsInLocal().getHeight() / 2 - (getBoundsInLocal().getHeight() / 2) % distanceOfLines);
+    getChildren().add(line);
   }
 
   private void move(LogicGate gate, MouseEvent e) {
-    double distanceOfLines = getDistanceOfLInes();
     if (breadboard == null) {
       this.breadboard = getBreadboard();
     }
@@ -147,7 +146,7 @@ public abstract class LogicGate extends Pane {
     Rectangle rect = new Rectangle();
     this.rect = rect;
     // calc the Height and width in the Futur
-    rect.setWidth(100 - 4 * LogicGate.distanceOfLines);
+    rect.setWidth(100 - 4 * distanceOfLines);
     rect.setHeight(WIDTH);
     // place the rectangle in the center of the pane
     rect.setLayoutX(getPrefWidth() / 2 - rect.getWidth() / 2);
@@ -191,27 +190,29 @@ public abstract class LogicGate extends Pane {
     return null;
   }
 
-  private double getDistanceOfLInes() {
-    if (breadboard == null) {
-      breadboard = getBreadboard();
-    }
-    for (int i = 0; i < breadboard.getChildren().size(); i++) {
-      if (breadboard.getChildren().get(i).getId() == null && breadboard.getChildren().get(i + 1).getId() == null) {
-        Line line = (Line) breadboard.getChildren().get(i);
-        if (line.getStartX() == line.getEndX()) {
-          Line line1 = (Line) breadboard.getChildren().get(i);
-          Line line2 = (Line) breadboard.getChildren().get(i + 1);
-          return line1.getStartX() - line2.getStartX();
-        } else {
-          Line line1 = (Line) breadboard.getChildren().get(i);
-          Line line2 = (Line) breadboard.getChildren().get(i + 1);
-          return line1.getStartY() - line2.getStartY();
-        }
-      } else {
-        System.out.println(breadboard.getChildrenUnmodifiable());
-        System.err.println("look over the hieraarchy of the children from breadboard");
-      }
-    }
-    return -1;
-  }
+  // private double getDistanceOfLInes() {
+  // if (breadboard == null) {
+  // breadboard = getBreadboard();
+  // }
+  // for (int i = 0; i < breadboard.getChildren().size(); i++) {
+  // if (breadboard.getChildren().get(i).getId() == null &&
+  // breadboard.getChildren().get(i + 1).getId() == null) {
+  // Line line = (Line) breadboard.getChildren().get(i);
+  // if (line.getStartX() == line.getEndX()) {
+  // Line line1 = (Line) breadboard.getChildren().get(i);
+  // Line line2 = (Line) breadboard.getChildren().get(i + 1);
+  // return line1.getStartX() - line2.getStartX();
+  // } else {
+  // Line line1 = (Line) breadboard.getChildren().get(i);
+  // Line line2 = (Line) breadboard.getChildren().get(i + 1);
+  // return line1.getStartY() - line2.getStartY();
+  // }
+  // } else {
+  // System.out.println(breadboard.getChildrenUnmodifiable());
+  // System.err.println("look over the hieraarchy of the children from
+  // breadboard");
+  // }
+  // }
+  // return -1;
+  // }
 }
