@@ -34,7 +34,6 @@ public class Breadboard extends Pane {
         if (connecting) {
           // create new connection
           selectedConnection= new Connection(e.getX() - e.getX() % gridDistance, e.getY() - e.getY( )% gridDistance);
-          selectedConnection.setStyle("-fx-stroke: grey");
           getChildren().add(selectedConnection);
           mouseAnchorY = e.getY() - e.getY() % gridDistance;
           mouseAnchorX = e.getX() - e.getX() % gridDistance;
@@ -48,18 +47,11 @@ public class Breadboard extends Pane {
 
       @Override
       public void handle(MouseEvent e) {
-        // selectedConnection
         if (connecting) {
-          System.out.println("MouseAncherX = " + mouseAnchorX + " MouseanchorY = " + mouseAnchorY);
-          
-          System.out.println(" X : " + Math.abs(mouseAnchorX - e.getX()) + ", Y : " + Math.abs(mouseAnchorY - e.getY()));
-
           if (Math.abs(mouseAnchorY - e.getY()) > Math.abs(mouseAnchorX - e.getX())) {
-            System.out.println(" Y > X ");
             selectedConnection.setEndY(e.getY() - e.getY() % gridDistance);
             selectedConnection.setEndX(mouseAnchorX);
           } else {
-            System.out.println(" X > Y ");
             selectedConnection.setEndX(e.getX() - e.getX() % gridDistance);
             selectedConnection.setEndY(mouseAnchorY);
           }
@@ -79,7 +71,6 @@ public class Breadboard extends Pane {
           }
           selectedConnection.setStyle("-fx-stroke: black");
           selectedConnection = null;
-          System.out.println(" \n");
           mouseAnchorX = 0;
           mouseAnchorY = 0;
         }
@@ -101,5 +92,9 @@ public class Breadboard extends Pane {
       line.setOpacity(0.2);
       getChildren().add(line);
     }
+  }
+
+  public int getGridDistance() {
+    return gridDistance;
   }
 }

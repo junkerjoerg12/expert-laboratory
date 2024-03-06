@@ -4,19 +4,23 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
 import de.junkerjoerg12.expert_laboratory.ui_components.Breadboard;
+import de.junkerjoerg12.expert_laboratory.ui_components.Connection;
 import de.junkerjoerg12.expert_laboratory.ui_components.LogicGateBar;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 
-public abstract class LogicGate extends StackPane {
+public abstract class LogicGate extends Pane {
+  // in case the hierarchy is messed up change to StackPane
   protected ArrayList<Boolean> inputs;
   protected boolean output;
 
   protected final double WIDTH = 100;
+
+  protected static double distanceOfLines = 10;
 
   protected double mouseAnchorX;
   protected double mouseAnchorY;
@@ -29,20 +33,24 @@ public abstract class LogicGate extends StackPane {
   protected LogicGate clonedGate;
   protected LogicGate thisGate;
 
-  // Maybe copy the Gate allways!!
-
   public LogicGate() {
-    // inputs = new ArrayList<>(2);
-    this.setStyle("-fx-background-color: pink;");
-    addRectangel();
+    this(2);
+  }
+
+  public LogicGate(int numberOfInputs) {
+    this.inputs = new ArrayList<>(numberOfInputs);
+    for (int i = 0; i < 2; i++) {
+      inputs.add(false);
+    }
+    // this.setStyle("-fx-background-color: pink;");
     setPrefSize(WIDTH, 100);
-
-
+    addRectangel();
+    addConnection();
 
     setOnMousePressed(new EventHandler<MouseEvent>() {
       @Override
       public void handle(MouseEvent e) {
-        //creates a new LogicGate object 
+        // creates a new LogicGate object
         mouseAnchorX = e.getX();
         mouseAnchorY = e.getY();
         thisGate = (LogicGate) e.getSource();
@@ -50,6 +58,8 @@ public abstract class LogicGate extends StackPane {
         if (breadboard == null) {
           breadboard = getBreadboard();
         }
+
+        // got to set the cloned gate Visible at some point right here
         try {
           clonedGate = (LogicGate) Class.forName(thisGate.getClass().getName()).getConstructor().newInstance();
           logicGateBar.getChildren().add(clonedGate);
@@ -65,7 +75,7 @@ public abstract class LogicGate extends StackPane {
     setOnMouseDragged(new EventHandler<MouseEvent>() {
       @Override
       public void handle(MouseEvent e) {
-        //moves the new LogicGate object
+        // moves the new LogicGate object
         if (clonedGate != null) {
           // move cloned Gate
           move(clonedGate, e);
@@ -79,7 +89,7 @@ public abstract class LogicGate extends StackPane {
     setOnMouseReleased(new EventHandler<MouseEvent>() {
       @Override
       public void handle(MouseEvent event) {
-        //deletes the not needed objects
+        // deletes the not needed objects
         thisGate.setAllVisibility(true);
         if (thisGate.getParent().getId().equals("breadboard")) {
           breadboard.getChildren().remove(thisGate);
@@ -90,6 +100,20 @@ public abstract class LogicGate extends StackPane {
         }
       }
     });
+  }
+
+  private void addConnection() {
+    for (int i = 1; i <= inputs.size(); i++) {
+      System.out.println("in the for loop");
+      // Connection line = new Connection(rect.getX() - rect.getWidth() / 2, i * 20,
+      // rect.getX() -10, i * 20);
+      Connection line = new Connection(0, 0, 20, 0);
+      line.setLayoutY(i * ((100 / (inputs.size() + 1)) - (100 / (inputs.size() + 1)) % LogicGate.distanceOfLines));
+      System.out.println(100 / (inputs.size() + 1));
+      getChildren().add(line);
+
+    }
+    System.out.println(getChildren());
   }
 
   private void move(LogicGate gate, MouseEvent e) {
@@ -122,8 +146,9 @@ public abstract class LogicGate extends StackPane {
   private void addRectangel() {
     Rectangle rect = new Rectangle();
     this.rect = rect;
-    rect.setWidth(50);
-    rect.setHeight(WIDTH - 30);
+    // calc the Height and width in the Futur
+    rect.setWidth(100 - 4 * LogicGate.distanceOfLines);
+    rect.setHeight(WIDTH);
     // place the rectangle in the center of the pane
     rect.setLayoutX(getPrefWidth() / 2 - rect.getWidth() / 2);
     rect.setLayoutY(getPrefHeight() / 2 - rect.getHeight() / 2);
