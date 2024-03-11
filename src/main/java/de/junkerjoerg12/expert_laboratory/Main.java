@@ -43,6 +43,8 @@ public class Main extends Application {// simmilar to JFrame
 
     mainWindow.setResizable(false);
 
+
+    ((LogicGateBar) root.getChildren().get(3)).addLogicGates();
   }
 
 }

@@ -6,16 +6,25 @@ import javafx.scene.Group;
 import javafx.scene.layout.Pane;
 
 public class LogicGateBar extends Pane {
+
+  private Breadboard breadboard;
+
   public LogicGateBar(Group root) {
-    this.setId("logicGateBar");
-
-    this.setLayoutX(0);
-    this.setLayoutY(root.getChildren().get(1).getBoundsInLocal().getMaxY() + root.getChildren().get(0).getBoundsInLocal().getMaxY());
-    this.setPrefHeight(1080 - getBoundsInLocal().getMinY());
-    this.setPrefWidth(LogicGate.getFutureWidth());
+    setId("logicGateBar");
+    
+    breadboard = (Breadboard) root.getChildren().get(2);
+    setLayoutX(0);
+    setLayoutY(root.getChildren().get(1).getBoundsInLocal().getMaxY()
+        + root.getChildren().get(0).getBoundsInLocal().getMaxY());
+    setPrefHeight(1080 - getBoundsInLocal().getMinY());
+    setPrefWidth(LogicGate.getFutureWidth());
     // make it green
-    this.setStyle("-fx-background-color: green;");
+    setStyle("-fx-background-color: green;");
 
-    this.getChildren().add(new Nand());
+  }
+
+  public void addLogicGates() {
+    System.out.println("Added logic gate to the bar");
+    getChildren().add(new Nand(breadboard));
   }
 }

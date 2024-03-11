@@ -15,7 +15,10 @@ import javafx.scene.shape.Rectangle;
 public abstract class LogicGate extends Pane {
   // in case the hierarchy is messed up change to StackPane
   protected ArrayList<Boolean> inputs;
+  protected ArrayList<Connection> inputConnections;
+
   protected boolean output;
+  protected Connection outputConnection;
 
   protected final double WIDTH = 100;
 
@@ -32,16 +35,18 @@ public abstract class LogicGate extends Pane {
   protected LogicGate clonedGate;
   protected LogicGate thisGate;
 
-  public LogicGate() {
-    this(2);
+  public LogicGate(Breadboard breadboard) {
+    this(2, breadboard);
   }
 
-  public LogicGate(int numberOfInputs) {
+  public LogicGate(int numberOfInputs, Breadboard breadboard) {
+    this.breadboard = breadboard;
     this.inputs = new ArrayList<>(numberOfInputs);
+    this.inputConnections = new ArrayList<>(numberOfInputs);
     for (int i = 0; i < 2; i++) {
       inputs.add(false);
     }
-    // this.setStyle("-fx-background-color: pink;");
+    this.setStyle("-fx-background-color: pink;");
     setPrefSize(WIDTH, 100);
     addRectangel();
     addConnection();
@@ -54,12 +59,13 @@ public abstract class LogicGate extends Pane {
         mouseAnchorY = e.getY();
         thisGate = (LogicGate) e.getSource();
         logicGateBar = getLogicGateBar();
-        if (breadboard == null) {
-          breadboard = getBreadboard();
-        }
+        // if (breadboard == null) {
+        //   breadboard = getBreadboard();
+        // }
 
         // got to set the cloned gate Visible at some point right here
         try {
+          System.out.println("New Gate");
           clonedGate = (LogicGate) Class.forName(thisGate.getClass().getName()).getConstructor().newInstance();
           logicGateBar.getChildren().add(clonedGate);
           thisGate.setAllVisibility(false);
@@ -94,8 +100,16 @@ public abstract class LogicGate extends Pane {
           breadboard.getChildren().remove(thisGate);
         }
         if (clonedGate.getParent().getId().equals("logicGateBar")) {
+          System.out.println("parent of cloned gate: " + clonedGate.getParent());
           logicGateBar.getChildren().remove(clonedGate);
           clonedGate = null;
+        } else {
+          System.out.println("gedropptes gate:");
+          for (Connection c : clonedGate.inputConnections) {
+            // System.out.println(c);
+            c.calculateAbsolutePositions();
+          }
+          clonedGate.outputConnection.calculateAbsolutePositions();
         }
       }
     });
@@ -103,17 +117,24 @@ public abstract class LogicGate extends Pane {
 
   private void addConnection() {
     // the input connections
+    System.out.println("Die Connections von einem neuen LogicGate");
     for (int i = 1; i <= inputs.size(); i++) {
-      Connection line = new Connection(0, 0, 2 * distanceOfLines, 0);
+      Connection line = new Connection(0, 0, 2 * distanceOfLines, 0, breadboard);
       line.setLayoutY(i * ((getBoundsInLocal().getHeight() / (inputs.size() + 1))
           - (getBoundsInLocal().getHeight() / (inputs.size() + 1)) % distanceOfLines));
       getChildren().add(line);
+      inputConnections.add(line);
+      line.calculateAbsolutePositions();
+      // System.out.println(line);
     }
     // the output connection
-    Connection line = new Connection(0, 0, 2 * distanceOfLines, 0);
-    line.setLayoutX(getBoundsInLocal().getWidth() /*- line.getEndX()*/);
+    Connection line = new Connection(0, 0, 2 * distanceOfLines, 0, breadboard);
+    line.setLayoutX(getBoundsInLocal().getWidth()); 
     line.setLayoutY(getBoundsInLocal().getHeight() / 2 - (getBoundsInLocal().getHeight() / 2) % distanceOfLines);
     getChildren().add(line);
+    outputConnection = line;
+    line.calculateAbsolutePositions();
+    // System.out.println(line);
   }
 
   private void move(LogicGate gate, MouseEvent e) {
@@ -155,10 +176,10 @@ public abstract class LogicGate extends Pane {
   }
 
   public void setAllVisibility(boolean visible) {
-    this.setVisible(visible);
-    for (Node child : this.getChildren()) {
-      child.setVisible(visible);
-    }
+    // this.setVisible(visible);
+    // for (Node child : this.getChildren()) {
+    //   child.setVisible(visible);
+    // }
   }
 
   private void setAllOpacity(double opacity) {
