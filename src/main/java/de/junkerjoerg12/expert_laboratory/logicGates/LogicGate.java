@@ -46,7 +46,7 @@ public abstract class LogicGate extends Pane {
     for (int i = 0; i < 2; i++) {
       inputs.add(false);
     }
-    this.setStyle("-fx-background-color: pink;");
+    // this.setStyle("-fx-background-color: pink;");
     setPrefSize(WIDTH, 100);
     addRectangel();
     addConnection();
@@ -60,13 +60,15 @@ public abstract class LogicGate extends Pane {
         thisGate = (LogicGate) e.getSource();
         logicGateBar = getLogicGateBar();
         // if (breadboard == null) {
-        //   breadboard = getBreadboard();
+        // breadboard = getBreadboard();
         // }
 
         // got to set the cloned gate Visible at some point right here
         try {
           System.out.println("New Gate");
-          clonedGate = (LogicGate) Class.forName(thisGate.getClass().getName()).getConstructor().newInstance();
+          System.out.println(breadboard);
+          clonedGate = (LogicGate) Class.forName(thisGate.getClass().getName()).getConstructor(Breadboard.class)
+              .newInstance(breadboard);
           logicGateBar.getChildren().add(clonedGate);
           thisGate.setAllVisibility(false);
         } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
@@ -122,6 +124,7 @@ public abstract class LogicGate extends Pane {
       Connection line = new Connection(0, 0, 2 * distanceOfLines, 0, breadboard);
       line.setLayoutY(i * ((getBoundsInLocal().getHeight() / (inputs.size() + 1))
           - (getBoundsInLocal().getHeight() / (inputs.size() + 1)) % distanceOfLines));
+      System.out.println();
       getChildren().add(line);
       inputConnections.add(line);
       line.calculateAbsolutePositions();
@@ -129,7 +132,7 @@ public abstract class LogicGate extends Pane {
     }
     // the output connection
     Connection line = new Connection(0, 0, 2 * distanceOfLines, 0, breadboard);
-    line.setLayoutX(getBoundsInLocal().getWidth()); 
+    line.setLayoutX(getBoundsInLocal().getWidth());
     line.setLayoutY(getBoundsInLocal().getHeight() / 2 - (getBoundsInLocal().getHeight() / 2) % distanceOfLines);
     getChildren().add(line);
     outputConnection = line;
@@ -178,7 +181,7 @@ public abstract class LogicGate extends Pane {
   public void setAllVisibility(boolean visible) {
     // this.setVisible(visible);
     // for (Node child : this.getChildren()) {
-    //   child.setVisible(visible);
+    // child.setVisible(visible);
     // }
   }
 

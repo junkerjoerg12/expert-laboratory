@@ -23,16 +23,13 @@ public class Breadboard extends Pane {
 
   private boolean darkmode = true;
 
-  private Breadboard thisBreadboard; 
+  private Breadboard thisBreadboard;
 
   public Breadboard(Group root, int gridDistance) {
     thisBreadboard = this;
     this.setId("breadboard");
-    Circle c = new Circle(200, 200, 5);
-    c.setFill(javafx.scene.paint.Color.RED);
-    getChildren().add(c);
     this.gridDistance = gridDistance;
-    this.setLayoutX(100);
+    this.setLayoutX(000);
     this.setLayoutY(root.getChildren().get(1).getBoundsInLocal().getMaxY()
         + root.getChildren().get(0).getBoundsInLocal().getMaxY());
     this.setPrefWidth(1920);
@@ -50,7 +47,8 @@ public class Breadboard extends Pane {
       public void handle(MouseEvent e) {
         if (connecting) {
           // create new connection
-          selectedConnection = new Connection(e.getX() - e.getX() % gridDistance, e.getY() - e.getY() % gridDistance, thisBreadboard);
+          selectedConnection = new Connection(e.getX() - e.getX() % gridDistance, e.getY() - e.getY() % gridDistance,
+              thisBreadboard);
           getChildren().add(selectedConnection);
           mouseAnchorY = e.getY() - e.getY() % gridDistance;
           mouseAnchorX = e.getX() - e.getX() % gridDistance;
@@ -83,7 +81,7 @@ public class Breadboard extends Pane {
       public void handle(MouseEvent e) {
         if (connecting) {
 
-          //removes the connection if its only a dot
+          // removes the connection if its only a dot
           if (e.getX() - e.getX() % gridDistance == mouseAnchorX
               && e.getY() - e.getY() % gridDistance == mouseAnchorY) {
             getChildren().remove(selectedConnection);
