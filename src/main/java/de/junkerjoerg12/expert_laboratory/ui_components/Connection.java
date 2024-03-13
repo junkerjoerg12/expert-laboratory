@@ -53,6 +53,19 @@ public class Connection extends Line {
     setEndY(endY);
   }
 
+  //this function should only  be called if getParet(). getClass() extends LogicGate 
+  public void setPoints() {
+    start = new Point2D(getParent().getLayoutX() + getLayoutX() + getStartX(),
+        getParent().getLayoutY() + getLayoutY() + getStartY());
+    
+    //draws a circle for visual controll 
+    // breadboard.getChildren().add(new Circle(start.getX(), start.getY(), 4, javafx.scene.paint.Color.BLACK));
+
+    end = new Point2D(getParent().getLayoutX() + getLayoutX() + getEndX(),
+        getParent().getLayoutY() + getLayoutY() + getEndY());
+    // breadboard.getChildren().add(new Circle(end.getX(), end.getY(), 4, javafx.scene.paint.Color.BLACK));
+  }
+
   public void setEndPoint() {
     end = new Point2D(getEndX(), getEndY());
     breadboard.getChildren().add(new Circle(end.getX(), end.getY(), 4, javafx.scene.paint.Color.BLACK));

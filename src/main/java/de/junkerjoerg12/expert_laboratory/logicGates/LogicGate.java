@@ -109,9 +109,9 @@ public abstract class LogicGate extends Pane {
           System.out.println("gedropptes gate:");
           for (Connection c : clonedGate.inputConnections) {
             // System.out.println(c);
-            c.calculateAbsolutePositions();
+            c.setPoints();
           }
-          clonedGate.outputConnection.calculateAbsolutePositions();
+          clonedGate.outputConnection.setPoints();
         }
       }
     });

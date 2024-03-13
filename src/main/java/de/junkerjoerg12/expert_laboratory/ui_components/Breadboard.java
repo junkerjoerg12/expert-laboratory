@@ -11,7 +11,8 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 
 public class Breadboard extends Pane {
-  private boolean connecting = true;
+  //different modes 
+  private boolean connecting = false;
   private boolean normal;
 
   private Connection selectedConnection;
