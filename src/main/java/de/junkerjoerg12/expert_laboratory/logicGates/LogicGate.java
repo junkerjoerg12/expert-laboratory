@@ -65,8 +65,6 @@ public abstract class LogicGate extends Pane {
 
         // got to set the cloned gate Visible at some point right here
         try {
-          System.out.println("New Gate");
-          System.out.println(breadboard);
           clonedGate = (LogicGate) Class.forName(thisGate.getClass().getName()).getConstructor(Breadboard.class)
               .newInstance(breadboard);
           logicGateBar.getChildren().add(clonedGate);
@@ -102,13 +100,10 @@ public abstract class LogicGate extends Pane {
           breadboard.getChildren().remove(thisGate);
         }
         if (clonedGate.getParent().getId().equals("logicGateBar")) {
-          System.out.println("parent of cloned gate: " + clonedGate.getParent());
           logicGateBar.getChildren().remove(clonedGate);
           clonedGate = null;
         } else {
-          System.out.println("gedropptes gate:");
           for (Connection c : clonedGate.inputConnections) {
-            // System.out.println(c);
             c.setPoints();
           }
           clonedGate.outputConnection.setPoints();
@@ -119,16 +114,12 @@ public abstract class LogicGate extends Pane {
 
   private void addConnection() {
     // the input connections
-    System.out.println("Die Connections von einem neuen LogicGate");
     for (int i = 1; i <= inputs.size(); i++) {
       Connection line = new Connection(0, 0, 2 * distanceOfLines, 0, breadboard);
       line.setLayoutY(i * ((getBoundsInLocal().getHeight() / (inputs.size() + 1))
           - (getBoundsInLocal().getHeight() / (inputs.size() + 1)) % distanceOfLines));
-      System.out.println();
       getChildren().add(line);
       inputConnections.add(line);
-      line.calculateAbsolutePositions();
-      // System.out.println(line);
     }
     // the output connection
     Connection line = new Connection(0, 0, 2 * distanceOfLines, 0, breadboard);
@@ -136,8 +127,6 @@ public abstract class LogicGate extends Pane {
     line.setLayoutY(getBoundsInLocal().getHeight() / 2 - (getBoundsInLocal().getHeight() / 2) % distanceOfLines);
     getChildren().add(line);
     outputConnection = line;
-    line.calculateAbsolutePositions();
-    // System.out.println(line);
   }
 
   private void move(LogicGate gate, MouseEvent e) {
@@ -214,29 +203,4 @@ public abstract class LogicGate extends Pane {
     return null;
   }
 
-  // private double getDistanceOfLInes() {
-  // if (breadboard == null) {
-  // breadboard = getBreadboard();
-  // }
-  // for (int i = 0; i < breadboard.getChildren().size(); i++) {
-  // if (breadboard.getChildren().get(i).getId() == null &&
-  // breadboard.getChildren().get(i + 1).getId() == null) {
-  // Line line = (Line) breadboard.getChildren().get(i);
-  // if (line.getStartX() == line.getEndX()) {
-  // Line line1 = (Line) breadboard.getChildren().get(i);
-  // Line line2 = (Line) breadboard.getChildren().get(i + 1);
-  // return line1.getStartX() - line2.getStartX();
-  // } else {
-  // Line line1 = (Line) breadboard.getChildren().get(i);
-  // Line line2 = (Line) breadboard.getChildren().get(i + 1);
-  // return line1.getStartY() - line2.getStartY();
-  // }
-  // } else {
-  // System.out.println(breadboard.getChildrenUnmodifiable());
-  // System.err.println("look over the hieraarchy of the children from
-  // breadboard");
-  // }
-  // }
-  // return -1;
-  // }
 }

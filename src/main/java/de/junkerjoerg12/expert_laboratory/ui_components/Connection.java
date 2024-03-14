@@ -1,11 +1,13 @@
 package de.junkerjoerg12.expert_laboratory.ui_components;
 
+import de.junkerjoerg12.expert_laboratory.logicGates.LogicGate;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Shape;
+import javafx.scene.text.Text;
 
 public class Connection extends Line {
 
@@ -24,15 +26,40 @@ public class Connection extends Line {
   protected Point2D start;
   protected Point2D end;
 
-  protected boolean condition;
+  protected Boolean condition = false;
+  protected Text showCondition;
 
   public Connection(Breadboard breadboard) {
     setStyle("-fx-stroke: purple");
-    if (breadboard == null) {
-      System.out.println("breadbord is null");
-    } else {
-      this.breadboard = breadboard;
-    }
+    setStrokeWidth(3);
+    this.breadboard = breadboard;
+    
+    showCondition = new Text(200, 200, condition.toString());
+    breadboard.getChildren().add(showCondition);
+    showCondition.setVisible(false);
+    setOnMouseEntered(new EventHandler<MouseEvent>() {
+      @Override
+      public void handle(MouseEvent e) {
+        if (getParent() == breadboard || getParent().getParent() == breadboard ) {
+          showInformation(true, e);
+        }
+      }
+    });
+    setOnMouseExited(new EventHandler<MouseEvent>() {
+      @Override
+      public void handle(MouseEvent e) {
+        showInformation(false, e);
+      }
+      
+    });
+  }
+
+  protected void showInformation(boolean show, MouseEvent e) {
+    if (show) {
+      showCondition.setX( e.getScreenX() - breadboard.getLayoutX());
+      showCondition.setY( e.getScreenY() - breadboard.getLayoutY() -30);
+    } 
+    showCondition.setVisible(show);
   }
 
   public Connection(double startX, double startY, Breadboard breadboard) {
@@ -42,6 +69,7 @@ public class Connection extends Line {
     setStartY(startY);
     setEndY(startY);
     start = new Point2D(startX, startY);
+    // draws a circle for visual controll
     breadboard.getChildren().add(new Circle(start.getX(), start.getY(), 4, javafx.scene.paint.Color.BLACK));
   }
 
@@ -53,57 +81,31 @@ public class Connection extends Line {
     setEndY(endY);
   }
 
-  //this function should only  be called if getParet(). getClass() extends LogicGate 
+  // this function should only be called if getParet(). getClass() extends
+  // LogicGate
   public void setPoints() {
     start = new Point2D(getParent().getLayoutX() + getLayoutX() + getStartX(),
         getParent().getLayoutY() + getLayoutY() + getStartY());
-    
-    //draws a circle for visual controll 
-    // breadboard.getChildren().add(new Circle(start.getX(), start.getY(), 4, javafx.scene.paint.Color.BLACK));
+
+    // draws a circle for visual controll
+    breadboard.getChildren().add(new Circle(start.getX(), start.getY(), 4,
+    javafx.scene.paint.Color.BLACK));
 
     end = new Point2D(getParent().getLayoutX() + getLayoutX() + getEndX(),
         getParent().getLayoutY() + getLayoutY() + getEndY());
-    // breadboard.getChildren().add(new Circle(end.getX(), end.getY(), 4, javafx.scene.paint.Color.BLACK));
+    breadboard.getChildren().add(new Circle(end.getX(), end.getY(), 4,
+    javafx.scene.paint.Color.BLACK));
   }
 
   public void setEndPoint() {
     end = new Point2D(getEndX(), getEndY());
+    // draws a circle for visual controll
     breadboard.getChildren().add(new Circle(end.getX(), end.getY(), 4, javafx.scene.paint.Color.BLACK));
   }
 
-  public boolean checkTouching(Connection checkWith) {
-    Shape intersection = intersect(checkWith, this);
-    if (intersection.getBoundsInLocal().getWidth() != -1) {
-      System.out.println("the lines intersect");
-      return true;
-    } else{
-      System.out.println("the lines do not intersect");
-      return false;
-    }
-  }
 
   public void printPosition() {
     System.out.println("Position of " + this);
   }
 
-  public void calculateAbsolutePositions() {
-    // Node parent = (Node) getParent();
-
-    // double length = getEndX() - getStartX();
-    // double height = getEndY() - getStartY();
-
-    // absoluteStartX = parent.getLayoutX() + getStartX();
-    // absoluteStartY = parent.getLayoutY() + getStartY();
-    // absoluteEndX = parent.getLayoutX() + getEndX() + length;
-    // absoluteEndY = parent.getLayoutY() + getEndY() + height;
-    // System.out.println("parents layout: " + parent.getLayoutX() + " " +
-    // parent.getLayoutY());
-    // System.out.println("connection layout X: " + getLayoutX() + ", Y: " +
-    // getLayoutY());
-    // System.out.println(this);
-
-    // System.out.println("Absolute koordinaten: sX: " + absoluteStartX + ", sY: " +
-    // absoluteStartY + ", eX: " + absoluteEndX + ", eY: " + absoluteEndY);
-    // System.out.println();
-  }
 }

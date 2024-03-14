@@ -3,16 +3,14 @@ package de.junkerjoerg12.expert_laboratory.ui_components;
 import java.util.ArrayList;
 
 import javafx.event.EventHandler;
-import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 
 public class Breadboard extends Pane {
   //different modes 
-  private boolean connecting = false;
+  private boolean connecting = true;
   private boolean normal;
 
   private Connection selectedConnection;
@@ -22,7 +20,7 @@ public class Breadboard extends Pane {
 
   private int gridDistance;
 
-  private boolean darkmode = true;
+  private boolean darkmode = false;
 
   private Breadboard thisBreadboard;
 
@@ -90,10 +88,6 @@ public class Breadboard extends Pane {
             selectedConnection.setEndPoint();
           }
 
-          // selectedConnection.setStyle("-fx-stroke: black");
-          // System.out.println("einfache connection");
-          // selectedConnection.printPosition();
-          // selectedConnection.calculateAbsolutePositions();
           connections.add(selectedConnection);
           selectedConnection = null;
           mouseAnchorX = 0;

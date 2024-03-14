@@ -24,7 +24,6 @@ public class LogicGateBar extends Pane {
   }
 
   public void addLogicGates() {
-    System.out.println("Added logic gate to the bar");
     getChildren().add(new Nand(breadboard));
   }
 }
