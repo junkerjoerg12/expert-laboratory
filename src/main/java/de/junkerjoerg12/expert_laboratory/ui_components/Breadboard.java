@@ -20,19 +20,20 @@ public class Breadboard extends Pane {
 
   private int gridDistance;
 
-  private boolean darkmode = false;
+  private boolean darkmode = true;
 
   private Breadboard thisBreadboard;
 
   public Breadboard(Group root, int gridDistance) {
-    thisBreadboard = this;
-    this.setId("breadboard");
     this.gridDistance = gridDistance;
-    this.setLayoutX(000);
-    this.setLayoutY(root.getChildren().get(1).getBoundsInLocal().getMaxY()
+    thisBreadboard = this;
+    setId("breadboard");
+    setLayoutX(000);
+    setLayoutY(root.getChildren().get(1).getBoundsInLocal().getMaxY()
         + root.getChildren().get(0).getBoundsInLocal().getMaxY());
-    this.setPrefWidth(1920);
-    this.setPrefHeight(1000);
+    setPrefWidth(1920);
+    setPrefHeight(1000);
+
     // make the color of the breadboard white
     if (darkmode) {
       setStyle("-fx-background-color: grey");
@@ -42,6 +43,7 @@ public class Breadboard extends Pane {
     paintGrid(gridDistance);
 
     setOnMousePressed(new EventHandler<MouseEvent>() {
+
       @Override
       public void handle(MouseEvent e) {
         if (connecting) {
@@ -79,22 +81,21 @@ public class Breadboard extends Pane {
       @Override
       public void handle(MouseEvent e) {
         if (connecting) {
-
           // removes the connection if its only a dot
           if (e.getX() - e.getX() % gridDistance == mouseAnchorX
               && e.getY() - e.getY() % gridDistance == mouseAnchorY) {
             getChildren().remove(selectedConnection);
           } else {
             selectedConnection.setEndPoint();
+            selectedConnection.connect();
+            connections.add(selectedConnection);
           }
-
-          connections.add(selectedConnection);
           selectedConnection = null;
           mouseAnchorX = 0;
           mouseAnchorY = 0;
+
         }
       }
-
     });
   }
 
@@ -111,5 +112,12 @@ public class Breadboard extends Pane {
       line.setOpacity(0.2);
       getChildren().add(line);
     }
+  }
+
+
+
+
+  public ArrayList<Connection> getConnections() {
+    return connections;
   }
 }
