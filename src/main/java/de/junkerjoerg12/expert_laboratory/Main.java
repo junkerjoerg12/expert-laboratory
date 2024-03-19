@@ -44,6 +44,7 @@ public class Main extends Application {// simmilar to JFrame
     mainWindow.setResizable(false);
 
 
+    ((ModeBar) root.getChildren().get(1)).setBreadboard((Breadboard) (root.getChildren().get(2)));
     ((LogicGateBar) root.getChildren().get(3)).addLogicGates();
   }
 

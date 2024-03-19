@@ -1,5 +1,7 @@
 package de.junkerjoerg12.expert_laboratory.ui_components;
 
+import java.beans.EventHandler;
+
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
